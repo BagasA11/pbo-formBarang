@@ -91,7 +91,7 @@ public class FormBarang extends javax.swing.JPanel {
         try{
             stm = Con.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
     //            stm = Con.createStatement();
-            RsBrg = stm.executeQuery("select * from barang");
+            RsBrg = stm.executeQuery("select * from items");
             ResultSetMetaData meta = RsBrg.getMetaData();
             int col = meta.getColumnCount();
             int baris = 0;
@@ -107,7 +107,7 @@ public class FormBarang extends javax.swing.JPanel {
                 dataTable[x][0] = RsBrg.getString("id");
                 dataTable[x][1] = RsBrg.getString("nama");
                 dataTable[x][4] = RsBrg.getInt("stok");
-                dataTable[x][5] = RsBrg.getInt("stok_minimum");
+                dataTable[x][5] = RsBrg.getInt("stok_min");
                 dataTable[x][2] = RsBrg.getString("unit");
                 dataTable[x][3] = RsBrg.getDouble("harga");
                 x++;
@@ -216,6 +216,8 @@ public class FormBarang extends javax.swing.JPanel {
                 return types [columnIndex];
             }
         });
+        
+
         jScrollPane1.setViewportView(tblBrg);
 
         cmdTambah.setText("tambah");
@@ -240,6 +242,11 @@ public class FormBarang extends javax.swing.JPanel {
         });
 
         cmdHapus.setText("hapus");
+        cmdHapus.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent e) {
+                cmdHapusActionPerformed(e);
+            };
+        });
 
         cmdBatal.setText("batal");
         cmdBatal.addActionListener(new java.awt.event.ActionListener() {
@@ -375,17 +382,22 @@ public class FormBarang extends javax.swing.JPanel {
         // query sql
         try{
             if (edit==true){
-                stm.executeUpdate("UPDATE barang SET nama = '"+ nama + "', unit = '"+ sSatuan + "', stok = " + stok 
-                + ", stok_minimum = " + stokMin + ", harga = " + harga + "WHERE id = '" + id + "'");
+                stm.executeUpdate("UPDATE items SET nama = '"+ nama + "', unit = '"+ sSatuan + "', stok = " + stok 
+                + ", stok_min = " + stokMin + ", harga = " + harga + "WHERE id = '" + id + "'");
             } else {
-                stm.executeUpdate("INSERT INTO barang(id, nama, stok, stok_minimum, unit, harga) VALUES ( '"
+                stm.executeUpdate("INSERT INTO items(id, nama, stok, stok_min, unit, harga) VALUES ( '"
                  + id + "', '" + nama + "'," + stok + "," + stokMin + ", '" + sSatuan + "' ," + harga + ")"
                 );
             }
             
-            
+            tblBrg.setModel(new DefaultTableModel(dataTable,header));
+            baca_data();
+            aktif(false);
+            setTombol(true);
+
         }catch(SQLException e){
         }
+
     }//GEN-LAST:event_cmdSimpanActionPerformed
 
     private void cmdTambahActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmdTambahActionPerformed
@@ -399,7 +411,28 @@ public class FormBarang extends javax.swing.JPanel {
         setTombol(true);        // TODO add your handling code here:
     }//GEN-LAST:event_cmdBatalActionPerformed
  
+    private void cmdHapusActionPerformed(java.awt.event.ActionEvent evt) {
+        try{
+            String sql="delete from items where id='" + txtKode.getText()+ "'";
+            stm.executeUpdate(sql);
+            baca_data();
+            
+            edit=false; //set ulang edit agar form tidak masuk ke mode edit
+        }
+        catch(SQLException e)
+        {
+            JOptionPane.showMessageDialog(null, e);
+        }
+    }
+
     private void cmdKoreksiActionPerformed(java.awt.event.ActionEvent evt){
+        edit=true;
+        aktif(true);
+        setTombol(false);
+        txtKode.setEditable(false);
+    }
+
+    private void tblBrgMouseClicked(java.awt.event.MouseEvent evt) {                                    
         setField();
     }
 
