@@ -142,8 +142,6 @@ public class FormBarang extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-       
-
         jTextField1 = new javax.swing.JTextField();
         jButton1 = new javax.swing.JButton();
         txtKode = new javax.swing.JTextField();
@@ -235,6 +233,11 @@ public class FormBarang extends javax.swing.JPanel {
         });
 
         cmdKoreksi.setText("koreksi");
+        cmdKoreksi.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cmdKoreksiActionPerformed(evt);
+            }
+        });
 
         cmdHapus.setText("hapus");
 
@@ -396,6 +399,9 @@ public class FormBarang extends javax.swing.JPanel {
         setTombol(true);        // TODO add your handling code here:
     }//GEN-LAST:event_cmdBatalActionPerformed
  
+    private void cmdKoreksiActionPerformed(java.awt.event.ActionEvent evt){
+        setField();
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JFrame frame;
